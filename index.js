@@ -1,26 +1,31 @@
 // e633b5e1a805d4255ff03ca0b12e4a5f
 // https://api.openweathermap.org/data/2.5/weather?q=London&APPID=e633b5e1a805d4255ff03ca0b12e4a5f
 
-let area = 'london';
 let items = [];
 
 const form = document.querySelector('form');
 form.addEventListener('submit', getData);
 
 const display = document.querySelector('#display ul');
+const timeDisplayer = document.querySelector('#time');
 
 function poppulateDisplay(datas = [], displayArea) {
-  datas.forEach((data) => {
+  display.textContent = ' ';
+  items = [];
+  datas.forEach((data, i) => {
     const li = document.createElement('li');
+    // li.setAttribute('id',i);
+    li.classList.add(`data${i}`);
     li.textContent = data;
-    displayArea.appendChild(li);
+    return displayArea.appendChild(li);
   });
 }
 
 function getData(e) {
   e.preventDefault();
   let data = this.querySelector('input[type="text"]').value;
-  area = data;
+  apiCall(data);
+  apiTimeCalc(data);
   this.reset();
 }
 
@@ -37,24 +42,45 @@ async function getWeather(location) {
       { mode: 'cors' }
     );
     const data = await response.json();
-    const temp = data.main.temp + ' Fahernhiet';
-    const humidity = data.main.temp + ' %';
-    const weather = data.weather[0].main;
-    const town = data.name;
-    const wind = data.wind.speed + ' knots';
+    const temp = data.main.temp.toFixed(2) + 'F';
+    const humidity = 'Humidity : ' + data.main.temp + ' %';
+    const weather = 'Weather : ' + data.weather[0].main;
+    const town = `${data.name},${today}`;
+    const wind = 'Wind Speed : ' + data.wind.speed + ' knots';
     return { town, temp, humidity, weather, wind };
   } catch (error) {
     console.log(error);
   }
 }
 
-getWeather(area).then((value) => {
-  console.log(value);
-  items.push(value);
-  poppulateDisplay(items, display);
-});
+// find the time btw api call
+function timeit(fn) {
+  return async function (...params) {
+    let beginApiCall = Date.now();
+    const finishApiCall = await fn(...params);
+    const duration = Date.now() - beginApiCall;
+    return duration;
+  };
+}
+
+function apiTimeCalc(area) {
+  const timeCheck = timeit(getWeather);
+  timeCheck(area).then((value) => {
+    let timeTaken = value / 1000 + ' seconds to complete API Call';
+    timeDisplayer.textContent = timeTaken;
+  });
+}
+
+function apiCall(area) {
+  return getWeather(area).then((value) => {
+    const arrayValues = Object.values(value);
+    arrayValues.forEach((i) => items.push(i));
+    poppulateDisplay(items, display);
+  });
+}
 
 function tempConverter(temp) {
   const celcius = (temp - 32) / 1.8;
   const fahernhiet = temp * 1.8 + 32;
 }
+apiCall('alappuzha');
