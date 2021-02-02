@@ -106,3 +106,4 @@ const gif = (function () {
 })();
 
 apiCall('alappuzha');
+console.log('finished');
