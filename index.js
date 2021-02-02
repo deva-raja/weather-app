@@ -21,7 +21,7 @@ function poppulateDisplay(datas = [], displayArea) {
 function getData(e) {
   e.preventDefault();
   let data = this.querySelector('input[type="text"]').value;
-  gif.apiCall(data);
+ apiCall(data);
   time.apiTimeCalc(data);
   this.reset();
 }
