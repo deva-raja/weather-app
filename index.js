@@ -46,7 +46,7 @@ async function getWeather(location) {
     const weather = 'Weather : ' + data.weather[0].main;
     const town = `${data.name},${today}`;
     const wind = 'Wind Speed : ' + data.wind.speed + ' knots';
-    getGif(weatherGif);
+    gif.getGif(weatherGif);
     return { town, temp, humidity, weather, wind };
   } catch (error) {
     console.log(error);
