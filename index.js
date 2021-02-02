@@ -44,9 +44,11 @@ async function getWeather(location) {
     const data = await response.json();
     const temp = data.main.temp.toFixed(2) + 'F';
     const humidity = 'Humidity : ' + data.main.temp + ' %';
+    const weatherGif = data.weather[0].main;
     const weather = 'Weather : ' + data.weather[0].main;
     const town = `${data.name},${today}`;
     const wind = 'Wind Speed : ' + data.wind.speed + ' knots';
+    getGif(weatherGif);
     return { town, temp, humidity, weather, wind };
   } catch (error) {
     console.log(error);
@@ -79,8 +81,23 @@ function apiCall(area) {
   });
 }
 
-function tempConverter(temp) {
-  const celcius = (temp - 32) / 1.8;
-  const fahernhiet = temp * 1.8 + 32;
+// gif function
+let image = document.querySelector('#gifs img');
+async function getGif(name) {
+  try {
+    const response = await fetch(
+      `https://api.giphy.com/v1/gifs/translate?api_key=QXhoIwlip7tURXxbutmhutI7eiYVC9mT&s="${name}"&weirdness=10`,
+      {
+        mode: 'cors',
+      }
+    );
+    const data = await response.json();
+    image.src = '';
+    image.src = data.data.images.original.url;
+  } catch (error) {
+    console.log(error);
+    image.src = 'no_net.gif';
+  }
 }
+
 apiCall('alappuzha');

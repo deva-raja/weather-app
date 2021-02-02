@@ -85,17 +85,17 @@ form input[type='submit']:hover {
   top: 135px;
 }
 
-#gifs {
-  border: 1px solid rgb(31, 133, 70);
-  width: 360px;
-  height: 280px;
+#gifs img{
+  width: 380px;
+  height: 290px;
   max-width: 360px;
   max-height: 280px;
   position: absolute;
   top: 29vh;
+  left: -8px;
 }
 
-#time{
+#time {
   position: absolute;
   bottom: -57vh;
   color: rgba(203, 206, 33, 0.979);
